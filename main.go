@@ -2,6 +2,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"image/png"
 	"os"
@@ -21,14 +22,22 @@ var favicon = []byte{
 }
 
 func main() {
-	file, err := os.Create("./favicon.png")
+	flag.Parse()
+	url := flag.Arg(0)
+	if url == "" {
+		fmt.Println("URL is empty")
+		return
+	}
+	// ゠゠゠゠゠゠゠゠゠゠ここから追加する゠゠゠゠゠゠゠゠゠゠
+	file, err := os.Create("./qr.png")
+	// ゠゠゠゠゠゠゠゠゠゠ここまで追加する゠゠゠゠゠゠゠゠゠゠
 	if err != nil {
 		fmt.Printf("file generation failed: %v\n", err)
 		return
 	}
 	defer file.Close()
 
-	img, err := qrgen.CreateImage(favicon)
+	img, err := qrgen.GenQRCode(url)
 	if err != nil {
 		fmt.Printf("image generation failed: %v\n", err)
 		return
